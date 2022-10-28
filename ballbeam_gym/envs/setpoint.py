@@ -12,6 +12,7 @@ import numpy as np
 from gym import spaces
 from ballbeam_gym.envs.base import BallBeamBaseEnv, VisualBallBeamBaseEnv
 
+
 class BallBeamSetpointEnv(BallBeamBaseEnv):
     """ BallBeamSetpointEnv
 
@@ -34,16 +35,16 @@ class BallBeamSetpointEnv(BallBeamBaseEnv):
     setpoint : target position of ball, float (units)
     """
 
-    def __init__(self, timestep=0.1, beam_length=1.0, max_angle=0.2, 
-                 init_velocity=0.0, max_timesteps=100, action_mode='continuous', 
+    def __init__(self, timestep=0.1, beam_length=1.0, max_angle=0.2,
+                 init_velocity=0.0, max_timesteps=100, action_mode='continuous',
                  setpoint=None):
-                 
+
         kwargs = {'timestep': timestep,
                   'beam_length': beam_length,
-                  'max_angle':max_angle,
+                  'max_angle': max_angle,
                   'init_velocity': init_velocity,
                   'max_timesteps': max_timesteps,
-                  'action_mode':action_mode}
+                  'action_mode': action_mode}
 
         super().__init__(**kwargs)
 
@@ -56,14 +57,14 @@ class BallBeamSetpointEnv(BallBeamBaseEnv):
                 raise ValueError('Setpoint outside of beam.')
             self.setpoint = setpoint
             self.random_setpoint = False
-                                # [angle, position, velocity, setpoint]
+            # [angle, position, velocity, setpoint]
         self.observation_space = spaces.Box(low=np.array([-max_angle,
-                                                          -np.inf,
-                                                          -np.inf,
+                                                          -beam_length / 2,
+                                                          -5,
                                                           -beam_length/2]),
-                                            high=np.array([max_angle, 
-                                                           np.inf, 
-                                                           np.inf, 
+                                            high=np.array([max_angle,
+                                                           beam_length / 2,
+                                                           5,
                                                            beam_length/2]))
 
     def step(self, action):
@@ -80,9 +81,9 @@ class BallBeamSetpointEnv(BallBeamBaseEnv):
         self.bb.update(self._action_conversion(action))
         obs = np.array([self.bb.theta, self.bb.x, self.bb.v, self.setpoint])
 
-        # reward squared proximity to setpoint 
+        # reward squared proximity to setpoint
         reward = (1.0 - abs(self.setpoint - self.bb.x)/self.bb.L)**2
-        
+
         return obs, reward, self.done, {}
 
     def reset(self):
@@ -94,12 +95,13 @@ class BallBeamSetpointEnv(BallBeamBaseEnv):
         observation : simulation state, np.ndarray (state variables)
         """
         super().reset()
-        
+
         if self.random_setpoint is None:
             self.setpoint = np.random.random_sample()*self.beam_length \
-                            - self.beam_length/2
+                - self.beam_length/2
 
         return np.array([self.bb.theta, self.bb.x, self.bb.v, self.setpoint])
+
 
 class VisualBallBeamSetpointEnv(VisualBallBeamBaseEnv):
     """ VisualBallBeamSetpointEnv
@@ -122,17 +124,17 @@ class VisualBallBeamSetpointEnv(VisualBallBeamBaseEnv):
 
     setpoint : target position of ball, float (units)
     """
-    
-    def __init__(self, timestep=0.1, beam_length=1.0, max_angle=0.2, 
-                 init_velocity=0.0, max_timesteps=100, action_mode='continuous', 
+
+    def __init__(self, timestep=0.1, beam_length=1.0, max_angle=0.2,
+                 init_velocity=0.0, max_timesteps=100, action_mode='continuous',
                  setpoint=None):
 
         kwargs = {'timestep': timestep,
                   'beam_length': beam_length,
-                  'max_angle':max_angle,
+                  'max_angle': max_angle,
                   'init_velocity': init_velocity,
                   'max_timesteps': max_timesteps,
-                  'action_mode':action_mode}
+                  'action_mode': action_mode}
 
         super().__init__(**kwargs)
 
@@ -160,7 +162,7 @@ class VisualBallBeamSetpointEnv(VisualBallBeamBaseEnv):
         self.bb.update(self._action_conversion(action))
         obs = self._get_state()
 
-        # reward squared proximity to setpoint 
+        # reward squared proximity to setpoint
         reward = (1.0 - abs(self.setpoint - self.bb.x)/self.bb.L)**2
 
         return obs, reward, self.done, {}
@@ -173,12 +175,9 @@ class VisualBallBeamSetpointEnv(VisualBallBeamBaseEnv):
         -------
         observation : simulation state, np.ndarray (state variables)
         """
-        
+
         if self.random_setpoint is None:
             self.setpoint = np.random.random_sample()*self.beam_length \
-                            - self.beam_length/2
+                - self.beam_length/2
 
         return super().reset()
-
-
-
