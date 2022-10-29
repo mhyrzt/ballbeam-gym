@@ -39,12 +39,14 @@ class BallBeamSetpointEnv(BallBeamBaseEnv):
                  init_velocity=0.0, max_timesteps=100, action_mode='continuous',
                  setpoint=None):
 
-        kwargs = {'timestep': timestep,
-                  'beam_length': beam_length,
-                  'max_angle': max_angle,
-                  'init_velocity': init_velocity,
-                  'max_timesteps': max_timesteps,
-                  'action_mode': action_mode}
+        kwargs = {
+            'timestep': timestep,
+            'beam_length': beam_length,
+            'max_angle': max_angle,
+            'init_velocity': init_velocity,
+            'max_timesteps': max_timesteps,
+            'action_mode': action_mode
+        }
 
         super().__init__(**kwargs)
 
@@ -58,14 +60,20 @@ class BallBeamSetpointEnv(BallBeamBaseEnv):
             self.setpoint = setpoint
             self.random_setpoint = False
             # [angle, position, velocity, setpoint]
-        self.observation_space = spaces.Box(low=np.array([-max_angle,
-                                                          -beam_length / 2,
-                                                          -5,
-                                                          -beam_length/2]),
-                                            high=np.array([max_angle,
-                                                           beam_length / 2,
-                                                           5,
-                                                           beam_length/2]))
+        self.observation_space = spaces.Box(
+            low=np.array([
+                -max_angle,
+                -beam_length / 2,
+                -5,
+                -beam_length/2
+            ]),
+            high=np.array([
+                max_angle,
+                beam_length / 2,
+                5,
+                beam_length/2
+            ])
+        )
 
     def step(self, action):
         """
