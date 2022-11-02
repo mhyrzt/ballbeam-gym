@@ -189,3 +189,6 @@ class VisualBallBeamSetpointEnv(VisualBallBeamBaseEnv):
                 - self.beam_length/2
 
         return super().reset()
+    
+    def is_goal_reached(self):
+        return self.current_step >= self.max_timesteps
