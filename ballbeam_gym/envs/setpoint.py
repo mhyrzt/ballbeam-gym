@@ -110,6 +110,8 @@ class BallBeamSetpointEnv(BallBeamBaseEnv):
 
         return np.array([self.bb.theta, self.bb.x, self.bb.v, self.setpoint])
 
+    def is_goal_reached(self):
+        return self.current_step >= self.max_timesteps
 
 class VisualBallBeamSetpointEnv(VisualBallBeamBaseEnv):
     """ VisualBallBeamSetpointEnv
@@ -190,5 +192,4 @@ class VisualBallBeamSetpointEnv(VisualBallBeamBaseEnv):
 
         return super().reset()
     
-    def is_goal_reached(self):
-        return self.current_step >= self.max_timesteps
+

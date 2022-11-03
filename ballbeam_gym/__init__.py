@@ -1,6 +1,6 @@
 from gym.envs.registration import register
 
-__version__ = '0.0.5'
+__version__ = '0.0.8'
 
 register(
     id='BallBeamBalance-v0',
