@@ -54,9 +54,20 @@ class BallBeamBalanceEnv(BallBeamBaseEnv):
         super().__init__(**kwargs)
         # [angle, position, velocity]
         self.observation_space = spaces.Box(
-            low=np.array([-max_angle, -np.inf, -np.inf]),
-            high=np.array([max_angle, np.inf, np.inf]),
+            low=np.array([
+                -max_angle,
+                -beam_length / 2,
+                -5,
+                -beam_length/2
+            ]),
+            high=np.array([
+                max_angle,
+                beam_length / 2,
+                5,
+                beam_length/2
+            ])
         )
+
 
     def step(self, action):
         """
