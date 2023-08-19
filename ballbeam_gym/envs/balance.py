@@ -89,6 +89,9 @@ class BallBeamBalanceEnv(BallBeamBaseEnv):
         return np.array([self.bb.theta, self.bb.x, self.bb.v])
 
 
+    def is_goal_reached(self):
+        return self.current_step >= self.max_timesteps
+
 class VisualBallBeamBalanceEnv(VisualBallBeamBaseEnv):
     """VisualBallBeamBalanceEnv
 
@@ -147,6 +150,3 @@ class VisualBallBeamBalanceEnv(VisualBallBeamBaseEnv):
         reward = 1.0 if self.bb.on_beam else 0.0
 
         return obs, reward, self.done, {}
-
-    def is_goal_reached(self):
-        return self.current_step >= self.max_timesteps
