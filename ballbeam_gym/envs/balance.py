@@ -54,20 +54,21 @@ class BallBeamBalanceEnv(BallBeamBaseEnv):
         super().__init__(**kwargs)
         # [angle, position, velocity]
         self.observation_space = spaces.Box(
-            low=np.array([
-                -max_angle,
-                -beam_length / 2,
-                -5,
-                -beam_length/2
-            ]),
-            high=np.array([
-                max_angle,
-                beam_length / 2,
-                5,
-                beam_length/2
-            ])
+            low=np.array(
+                [
+                    -max_angle,
+                    -beam_length / 2,
+                    -5,
+                ]
+            ),
+            high=np.array(
+                [
+                    max_angle,
+                    beam_length / 2,
+                    5,
+                ]
+            ),
         )
-
 
     def step(self, action):
         """
@@ -99,9 +100,9 @@ class BallBeamBalanceEnv(BallBeamBaseEnv):
         super().reset()
         return np.array([self.bb.theta, self.bb.x, self.bb.v])
 
-
     def is_goal_reached(self):
         return self.current_step >= self.max_timesteps
+
 
 class VisualBallBeamBalanceEnv(VisualBallBeamBaseEnv):
     """VisualBallBeamBalanceEnv
