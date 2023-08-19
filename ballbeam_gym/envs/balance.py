@@ -12,8 +12,9 @@ import numpy as np
 from gym import spaces
 from ballbeam_gym.envs.base import BallBeamBaseEnv, VisualBallBeamBaseEnv
 
+
 class BallBeamBalanceEnv(BallBeamBaseEnv):
-    """ BallBeamBalanceEnv
+    """BallBeamBalanceEnv
 
     Balance environment with a state consisting of key variables
 
@@ -23,7 +24,7 @@ class BallBeamBalanceEnv(BallBeamBaseEnv):
 
     beam_length : length of beam, float (units)
 
-    max_angle : max of abs(angle), float (rads) 
+    max_angle : max of abs(angle), float (rads)
 
     init_velocity : initial speed of ball, float (units/s)
 
@@ -32,24 +33,30 @@ class BallBeamBalanceEnv(BallBeamBaseEnv):
     action_mode : action space, str ['continuous', 'discrete']
     """
 
-    def __init__(self, timestep=0.1, beam_length=1.0, max_angle=0.2, 
-                 init_velocity=None, max_timesteps=100, action_mode='continuous'):
-                 
-        kwargs = {'timestep': timestep,
-                  'beam_length': beam_length,
-                  'max_angle':max_angle,
-                  'init_velocity': init_velocity,
-                  'max_timesteps': max_timesteps,
-                  'action_mode':action_mode}
+    def __init__(
+        self,
+        timestep=0.1,
+        beam_length=1.0,
+        max_angle=0.2,
+        init_velocity=None,
+        max_timesteps=100,
+        action_mode="continuous",
+    ):
+        kwargs = {
+            "timestep": timestep,
+            "beam_length": beam_length,
+            "max_angle": max_angle,
+            "init_velocity": init_velocity,
+            "max_timesteps": max_timesteps,
+            "action_mode": action_mode,
+        }
 
         super().__init__(**kwargs)
-                                        # [angle, position, velocity] 
-        self.observation_space = spaces.Box(low=np.array([-max_angle, 
-                                                          -np.inf, 
-                                                          -np.inf]), 
-                                            high=np.array([max_angle, 
-                                                           np.inf, 
-                                                           np.inf]))
+        # [angle, position, velocity]
+        self.observation_space = spaces.Box(
+            low=np.array([-max_angle, -np.inf, -np.inf]),
+            high=np.array([max_angle, np.inf, np.inf]),
+        )
 
     def step(self, action):
         """
@@ -71,7 +78,7 @@ class BallBeamBalanceEnv(BallBeamBaseEnv):
         return obs, reward, self.done, {}
 
     def reset(self):
-        """ 
+        """
         Reset environment
 
         Returns
@@ -81,8 +88,9 @@ class BallBeamBalanceEnv(BallBeamBaseEnv):
         super().reset()
         return np.array([self.bb.theta, self.bb.x, self.bb.v])
 
+
 class VisualBallBeamBalanceEnv(VisualBallBeamBaseEnv):
-    """ VisualBallBeamBalanceEnv
+    """VisualBallBeamBalanceEnv
 
     Balance environment with simulation plot as state
 
@@ -92,7 +100,7 @@ class VisualBallBeamBalanceEnv(VisualBallBeamBaseEnv):
 
     beam_length : length of beam, float (units)
 
-    max_angle : max of abs(angle), float (rads) 
+    max_angle : max of abs(angle), float (rads)
 
     init_velocity : initial speed of ball, float (units/s)
 
@@ -101,15 +109,23 @@ class VisualBallBeamBalanceEnv(VisualBallBeamBaseEnv):
     action_mode : action space, str ['continuous', 'discrete']
     """
 
-    def __init__(self, timestep=0.1, beam_length=1.0, max_angle=0.2, 
-                 init_velocity=None, max_timesteps=100, action_mode='continuous'):
-
-        kwargs = {'timestep': timestep,
-                  'beam_length': beam_length,
-                  'max_angle':max_angle,
-                  'init_velocity': init_velocity,
-                  'max_timesteps': max_timesteps,
-                  'action_mode':action_mode}
+    def __init__(
+        self,
+        timestep=0.1,
+        beam_length=1.0,
+        max_angle=0.2,
+        init_velocity=None,
+        max_timesteps=100,
+        action_mode="continuous",
+    ):
+        kwargs = {
+            "timestep": timestep,
+            "beam_length": beam_length,
+            "max_angle": max_angle,
+            "init_velocity": init_velocity,
+            "max_timesteps": max_timesteps,
+            "action_mode": action_mode,
+        }
 
         super().__init__(**kwargs)
 
@@ -132,4 +148,5 @@ class VisualBallBeamBalanceEnv(VisualBallBeamBaseEnv):
 
         return obs, reward, self.done, {}
 
-
+    def is_goal_reached(self):
+        return self.current_step >= self.max_timesteps
